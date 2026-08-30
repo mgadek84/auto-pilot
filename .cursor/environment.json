@@ -1,0 +1,4 @@
+{
+  "name": "Selenium recruitment tasks (Java 1.8)",
+  "install": "./scripts/install-dependencies.sh"
+}

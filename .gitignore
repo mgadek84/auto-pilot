@@ -1,0 +1,23 @@
+target/
+test-output/
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local WebDriver binaries / logs
+*.log
+chromedriver
+chromedriver.exe
+geckodriver
+geckodriver.exe

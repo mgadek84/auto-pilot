@@ -1,0 +1,10 @@
+# Normalise line endings in the repository so the project can be cloned on Windows,
+# Linux and macOS alike.
+* text=auto
+
+# Shell scripts must keep LF endings or they fail to run under bash / WSL.
+*.sh text eol=lf
+
+*.png binary
+*.jpg binary
+*.mp4 binary
