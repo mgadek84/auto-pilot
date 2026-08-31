@@ -24,9 +24,16 @@ public final class ConsentLocators {
             By.id("accept-choices"),
             By.cssSelector("button#accept-choices"),
             By.cssSelector("button.fc-cta-consent"),
+            By.cssSelector(".fc-cta-consent"),
+            By.cssSelector(".fc-button.fc-cta-consent"),
+            By.cssSelector("button.fc-primary-button"),
             By.cssSelector("#snigel-cmp-framework button[data-action='accept']"),
-            By.xpath("//button[contains(., 'Accept all') or contains(., 'Accept All')"
-                    + " or contains(., 'I accept') or contains(., 'Accept & continue')]")
+            By.xpath("//button[contains(., 'Potwierdź') or contains(., 'Zaakceptuj')"
+                    + " or contains(., 'Zgadzam się') or contains(., 'Accept all')"
+                    + " or contains(., 'Accept All') or contains(., 'I accept')"
+                    + " or contains(., 'Accept & continue') or contains(., 'Agree')]"),
+            By.xpath("//*[@role='button'][contains(., 'Potwierdź') or contains(., 'Zaakceptuj wszystko')"
+                    + " or contains(., 'Accept all')]")
     };
 
     public static final By[] YOUTUBE = {

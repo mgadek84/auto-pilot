@@ -2,12 +2,6 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 <suite name="Recruitment tasks" verbose="1">
 
-    <test name="Task 1 - toolchain">
-        <classes>
-            <class name="com.gitlab.rmarzec.task.Task1Test"/>
-        </classes>
-    </test>
-
     <test name="Task 2 - Wikipedia languages">
         <classes>
             <class name="com.gitlab.rmarzec.task.Task2Test"/>

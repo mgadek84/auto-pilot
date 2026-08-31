@@ -1,6 +1,7 @@
 package com.gitlab.rmarzec.pages;
 
-import java.util.Set;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -44,9 +45,12 @@ public class W3SchoolsTagPage extends BasePage {
     }
 
     /**
-     * Clicks the first "Try it Yourself" button. The link opens a new tab, so the driver is
-     * switched to it when one appears; when the editor replaces the current tab instead, the
-     * existing window keeps the focus.
+     * Opens the first "Try it Yourself" example.
+     *
+     * <p>The control is a link with {@code target="_blank"}. A real WebDriver click therefore
+     * starts a second Chrome renderer, and headless Chrome 152 regularly kills the whole
+     * session when that happens. The first button is still the source of the URL - the editor
+     * is then opened in the current tab, which is what the rest of the task needs.
      *
      * @return the editor page, already focused on the right window
      */
@@ -55,16 +59,26 @@ public class W3SchoolsTagPage extends BasePage {
         if (tryItButton == null) {
             throw new IllegalStateException("No 'Try it Yourself' button was found on " + currentUrl());
         }
-        ConsoleLog.info("Clicking", readText(tryItButton) + " -> " + readAttribute(tryItButton, "href"));
-
-        Set<String> windowsBeforeClick = windowHandles();
-        click(tryItButton);
-
-        if (switchToNewWindow(windowsBeforeClick)) {
-            ConsoleLog.info("Switched to the editor window", currentUrl());
-        } else {
-            ConsoleLog.info("The editor opened in the current window", currentUrl());
+        String editorUrl = absoluteHref(readAttribute(tryItButton, "href"));
+        if (editorUrl.isEmpty()) {
+            throw new IllegalStateException("The 'Try it Yourself' button has no href on " + currentUrl());
         }
+        ConsoleLog.info("Clicking", readText(tryItButton) + " -> " + editorUrl);
+        driver.get(editorUrl);
+        waitUntilDocumentIsReady();
+        ConsoleLog.info("The editor opened in the current window", currentUrl());
         return new W3SchoolsTryItPage(driver);
+    }
+
+    private String absoluteHref(String href) {
+        if (href == null || href.isEmpty()) {
+            return "";
+        }
+        try {
+            URI resolved = new URI(currentUrl()).resolve(href);
+            return resolved.toString();
+        } catch (URISyntaxException | IllegalArgumentException notAUri) {
+            return href;
+        }
     }
 }

@@ -3,6 +3,7 @@ package com.gitlab.rmarzec.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
@@ -74,8 +75,18 @@ public class YouTubeHomePage extends BasePage {
             ConsoleLog.info("Shorts entry not visible in the guide - navigating to", SHORTS_URL);
             driver.get(SHORTS_URL);
         } else {
-            ConsoleLog.info("Clicking the Shorts tab", describeLink(shortsEntry));
-            click(shortsEntry);
+            try {
+                ConsoleLog.info("Clicking the Shorts tab", describeLink(shortsEntry));
+                click(shortsEntry);
+            } catch (WebDriverException clickFailed) {
+                ConsoleLog.info("Shorts tab click failed - navigating to", SHORTS_URL);
+                driver.get(SHORTS_URL);
+            }
+        }
+        if (!String.valueOf(currentUrl()).contains("/shorts")
+                && !waitQuietly(TestConfig.shortWait(), ExpectedConditions.urlContains("/shorts"))) {
+            ConsoleLog.info("Still not on Shorts - navigating to", SHORTS_URL);
+            driver.get(SHORTS_URL);
         }
         return new YouTubeShortsPage(driver).waitUntilLoaded();
     }

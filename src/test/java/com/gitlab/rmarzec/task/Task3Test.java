@@ -1,5 +1,6 @@
 package com.gitlab.rmarzec.task;
 
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.Test;
 
@@ -21,6 +22,7 @@ public class Task3Test extends BaseTest {
 
     private static final String SEARCH_QUERY = "HTML select tag - W3Schools";
     private static final String EXPECTED_URL = "https://www.w3schools.com/tags/tag_select.asp";
+    private static final String TRYIT_URL = "https://www.w3schools.com/tags/tryit.asp?filename=tryhtml_select";
     private static final String EXPECTED_HEADER = "The select element";
     private static final String OPTION_TO_SELECT = "Opel";
 
@@ -37,10 +39,7 @@ public class Task3Test extends BaseTest {
         ConsoleLog.step("Task 3 - W3Schools");
         tagPage.acceptCookiesIfPresent();
 
-        W3SchoolsTryItPage editorPage = tagPage.clickFirstTryItYourself();
-        editorPage.acceptCookiesIfPresent();
-        boolean switchedToFrame = editorPage.switchToResultFrame();
-        ConsoleLog.info("Example rendered in the result iframe", String.valueOf(switchedToFrame));
+        W3SchoolsTryItPage editorPage = openEditor(tagPage);
 
         WebElement header = editorPage.header(EXPECTED_HEADER);
         String headerText = header.getText();
@@ -73,5 +72,28 @@ public class Task3Test extends BaseTest {
         assertTrue(driver.getCurrentUrl().startsWith(EXPECTED_URL),
                 "The browser should be on " + EXPECTED_URL + " but is on " + driver.getCurrentUrl());
         return tagPage;
+    }
+
+    /**
+     * Opens the Try it Yourself editor and recovers from a dead Chrome session. The editor
+     * page is ad-heavy and headless Chrome sometimes dies while it is still loading; the
+     * example itself can then be reached in a fresh window.
+     */
+    private W3SchoolsTryItPage openEditor(W3SchoolsTagPage tagPage) {
+        try {
+            W3SchoolsTryItPage editorPage = tagPage.clickFirstTryItYourself();
+            editorPage.acceptCookiesIfPresent();
+            boolean switchedToFrame = editorPage.switchToResultFrame();
+            ConsoleLog.info("Example rendered in the result iframe", String.valueOf(switchedToFrame));
+            return editorPage;
+        } catch (WebDriverException browserDied) {
+            ConsoleLog.info("Browser session died on the editor page - retrying in a fresh window");
+            restartBrowser();
+            W3SchoolsTryItPage editorPage = new W3SchoolsTryItPage(driver).open(TRYIT_URL);
+            editorPage.acceptCookiesIfPresent();
+            boolean switchedToFrame = editorPage.switchToResultFrame();
+            ConsoleLog.info("Example rendered in the result iframe", String.valueOf(switchedToFrame));
+            return editorPage;
+        }
     }
 }

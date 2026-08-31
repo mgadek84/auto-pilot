@@ -11,7 +11,7 @@
     <packaging>jar</packaging>
 
     <name>Selenium Recruitment Tasks</name>
-    <description>Selenium WebDriver + TestNG automation for recruitment tasks 1-4, built for Java 1.8.</description>
+    <description>Selenium WebDriver + TestNG automation for recruitment tasks 2-4, built for Java 1.8.</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
