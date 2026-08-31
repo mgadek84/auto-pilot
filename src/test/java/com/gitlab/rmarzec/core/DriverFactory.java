@@ -34,6 +34,21 @@ public final class DriverFactory {
         silenceChromeDevToolsWarnings();
     }
 
+    /**
+     * W3Schools (and similar demo pages) load enough ad iframes in headless Chrome to crash
+     * the renderer. Sinkholing the usual ad hosts keeps the example itself available.
+     */
+    private static final String AD_HOST_RESOLVER_RULES =
+            "MAP *.doubleclick.net 127.0.0.1,"
+                    + "MAP *.googlesyndication.com 127.0.0.1,"
+                    + "MAP *.googleadservices.com 127.0.0.1,"
+                    + "MAP *.googletagservices.com 127.0.0.1,"
+                    + "MAP *.snigelweb.com 127.0.0.1,"
+                    + "MAP *.media.net 127.0.0.1,"
+                    + "MAP *.amazon-adsystem.com 127.0.0.1,"
+                    + "MAP *.taboola.com 127.0.0.1,"
+                    + "MAP *.outbrain.com 127.0.0.1";
+
     private DriverFactory() {
     }
 
@@ -72,9 +87,15 @@ public final class DriverFactory {
                 "--disable-dev-shm-usage",
                 "--disable-gpu",
                 "--disable-notifications",
-                "--disable-popup-blocking",
                 "--disable-search-engine-choice-screen",
-                "--remote-allow-origins=*");
+                "--remote-allow-origins=*",
+                "--no-first-run",
+                "--no-default-browser-check",
+                "--mute-audio",
+                "--disable-hang-monitor",
+                "--disable-crash-reporter",
+                "--disable-site-isolation-trials",
+                "--host-resolver-rules=" + AD_HOST_RESOLVER_RULES);
     }
 
     private static FirefoxOptions firefoxOptions() {

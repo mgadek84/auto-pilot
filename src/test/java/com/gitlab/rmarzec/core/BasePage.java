@@ -206,7 +206,11 @@ public abstract class BasePage {
             new Actions(driver).moveToElement(element).click().perform();
             return;
         } catch (WebDriverException mouseClickBlocked) {
-            clickWithJavaScript(element);
+            try {
+                clickWithJavaScript(element);
+            } catch (StaleElementReferenceException elementWasRerendered) {
+                throw elementWasRerendered;
+            }
         }
     }
 
@@ -260,12 +264,16 @@ public abstract class BasePage {
         if (!opened) {
             return false;
         }
-        for (String handle : driver.getWindowHandles()) {
-            if (!handlesBeforeAction.contains(handle)) {
-                driver.switchTo().window(handle);
-                waitUntilDocumentIsReady();
-                return true;
+        try {
+            for (String handle : driver.getWindowHandles()) {
+                if (!handlesBeforeAction.contains(handle)) {
+                    driver.switchTo().window(handle);
+                    waitUntilDocumentIsReady();
+                    return true;
+                }
             }
+        } catch (WebDriverException newWindowUnusable) {
+            return false;
         }
         return false;
     }

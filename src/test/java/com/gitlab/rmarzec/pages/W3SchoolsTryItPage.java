@@ -27,9 +27,19 @@ public class W3SchoolsTryItPage extends BasePage {
         this.consentHandler = new ConsentHandler(driver);
     }
 
-    /** The editor opens in a new tab, which may show the consent banner again. */
+    public W3SchoolsTryItPage open(String url) {
+        driver.get(url);
+        waitUntilDocumentIsReady();
+        return this;
+    }
+
+    /**
+     * The editor chrome is ad-heavy; a long consent wait here is what tends to kill headless
+     * Chrome. Accept the banner only if it is already on screen, then move on to the example
+     * iframe which is a tiny document.
+     */
     public W3SchoolsTryItPage acceptCookiesIfPresent() {
-        consentHandler.acceptIfPresent("W3Schools editor", ConsentLocators.W3SCHOOLS);
+        consentHandler.acceptIfPresentNow("W3Schools editor", ConsentLocators.W3SCHOOLS);
         return this;
     }
 

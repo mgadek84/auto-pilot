@@ -1,6 +1,6 @@
 # Selenium Recruitment Tasks
 
-UI test automation for the four recruitment tasks, written with **Selenium WebDriver** and
+UI test automation for recruitment tasks 2–4, written with **Selenium WebDriver** and
 **TestNG** on **Java 1.8** and built with **Maven**.
 
 The suite drives real websites (Wikipedia, Google, W3Schools, YouTube). Every wait is an
@@ -10,7 +10,6 @@ explicit `WebDriverWait` bound to a condition - there is no `Thread.sleep` in th
 
 | Test class | Task |
 | --- | --- |
-| `com.gitlab.rmarzec.task.Task1Test` | Verifies the toolchain: the sources are compiled for Java 1.8, the tests run under Maven and a browser session can be started. |
 | `com.gitlab.rmarzec.task.Task2Test` | Opens `https://pl.wikipedia.org/wiki/Wiki`, opens the language selector, collects every language as a `List<WebElement>`, prints each language name and prints the `href` of the English version. |
 | `com.gitlab.rmarzec.task.Task3Test` | Searches Google for `HTML select tag - W3Schools`, uses "Szczęśliwy traf" (I'm Feeling Lucky), verifies (and corrects) the landing URL, opens the first "Try it Yourself" editor, switches to the `iframeResult` frame, prints the "The select element" header and selects `Opel` with Selenium's `Select` class, printing `Opel, opel`. |
 | `com.gitlab.rmarzec.task.Task4Test` | Opens YouTube, accepts consent, visits Shorts and prints the channel of the playing Short, returns home, searches for `Live`, collects the first 12 standard video results into a `List<YTTile>` (title, channel, duration - `live` for streams) and prints all results that are not live. |
@@ -40,8 +39,8 @@ mvn clean test
 Run a single task:
 
 ```bash
+mvn test -Dtest=Task2Test
 mvn test -Dtest=Task3Test
-mvn test -Dtest=Task4Test#collectsFirstTwelveVideoResultsForLiveKeyword
 ```
 
 Watch the browser instead of running headless:
@@ -70,7 +69,7 @@ src/test/java/com/gitlab/rmarzec/
 ├── model/     YTTile - data of a single YouTube search result
 ├── pages/     page objects: Wikipedia, Google, W3Schools, YouTube
 ├── support/   cookie consent handling shared by the page objects
-└── task/      Task1Test .. Task4Test - the tasks themselves
+└── task/      Task2Test, Task3Test, Task4Test
 src/test/resources/suites/all-tasks.xml
 ```
 
